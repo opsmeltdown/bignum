@@ -26,7 +26,16 @@ public class BigNumArithmetic {
 			String[] arrLine = line.split(" ");
 			for (int i = 0; i < arrLine.length; i++) {
 				if (!arrLine[i].equals("+") || !arrLine[i].equals("*") ||!arrLine[i].equals("^")) {
+					String temp = arrLine[i];
+					for(int j =0; j<temp.length(); j++){
+						if (temp.charAt(j)==0){
+							temp = temp.substring(j+1);
+						}
+						else break;
+					}
+					arrLine[i]=temp;
 					stack.push(arrLine[i]);
+					
 				} else {
 					mth.calculate(stack.pop(), stack.pop(), arrLine[i]);
 				}
