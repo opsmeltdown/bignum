@@ -16,10 +16,12 @@ public class MathOperations {
 	private LList<Integer> StringtoLL (String a) {
 		LList<Integer> temp = new LList<Integer>();
 		//iterate thru string adding all numbers to linked list nodes
-		for( int i = 0; i < temp.length(); i++){
+		System.out.println("String length = " + a.length());
+		temp.moveToStart();
+		for( int i = 0; i < a.length(); i++){
 			int num = Character.getNumericValue(a.charAt(i));
 			Integer x = new Integer(num);
-			temp.append(x);
+			temp.insert(x);
 		}
 		return temp;
 	}
@@ -29,7 +31,6 @@ public class MathOperations {
 		String answer = "";
 		for(a.moveToStart(); !a.isAtEnd(); a.next()){
 			answer = answer.concat(a.getValue().toString());
-			System.out.println("is this doing anything?");
 		}
 		return answer;
 	}
@@ -41,19 +42,19 @@ public class MathOperations {
 		LList<Integer> answer = new LList<Integer>();
 		Integer carry = new Integer(0);
 		Integer sum = new Integer(0);
-		
+		System.out.println("a length = " + a.length() + " b length = " + b.length());	
 		//find the bigger sized list and use that as for loop parameter
 		//ineffiecient but itll do
 		if (a.length() >= b.length()) {
 			for(a.moveToStart(); !a.isAtEnd(); a.next()){
 				sum = carry;
 	        		if (!b.isAtEnd()){
-					sum += a.getValue();
+					sum += b.getValue();
 				}
 				sum += a.getValue();
 				carry = sum / 10;
 		 		sum = sum % 10;
-		 		answer.append(sum);
+		 		answer.insert(sum);
 		 		b.next();
 			}
 
@@ -66,11 +67,11 @@ public class MathOperations {
 				sum += b.getValue();
 				carry = sum / 10;
 		 		sum = sum % 10;
-		 		answer.append(sum);
+		 		answer.insert(sum);
 		 		a.next();
 			}
 		}
-		if (carry != 0) answer.append(carry);
+		if (carry != 0) answer.insert(carry);
 		return answer; 
 	}
 
