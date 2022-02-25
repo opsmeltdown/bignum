@@ -1,141 +1,124 @@
-// LinkedList.java
-// Jon Duncan, I pledge
+import java.util.NoSuchElementException;
 
-public class LList<Type> {
-    // a Node of the list
-    private class Node {
-        public Type data;
-        public Node next;
+// Linked list implementation
+class LList<E> implements List<E> {
+  private Link<E> head;      // Pointer to list header
+  private Link<E> tail;      // Pointer to last element
+  private Link<E> curr;      // Access to current element
+  private int listSize;      // Size of list
+
+  // Constructors
+  LList(int size) {      // Constructor -- Ignore size
+    this(); 
+  }
+  LList() { 
+    clear(); 
+  }
+
+  // Remove all elements
+  public void clear() {
+    curr = tail = new Link<E>(null); // Create trailer
+    head = new Link<E>(tail);        // Create header
+    listSize = 0;
+  }
+  
+  // Insert "it" at current position
+  public boolean insert(E it) {
+    curr.setNext(new Link<E>(curr.element(), curr.next()));
+    curr.setElement(it);
+    if (tail == curr) {
+      tail = curr.next();  // New tail
     }
+    listSize++;
+    return true;
+  }
+  
+  // Append "it" to list
+  public boolean append(E it) {
+    tail.setNext(new Link<E>(null));
+    tail.setElement(it);
+    tail = tail.next();
+    listSize++;
+    return true;
+  }
 
-    // the head of the list is first node
-    private Node head;
-
-    // the list starts empty
-    public LList() {
-        head = null;
+  // Remove and return current element
+  public E remove () throws NoSuchElementException {
+    if (curr == tail) {// Nothing to remove
+      throw new NoSuchElementException("remove() in LList has current of " + curr + " and size of "
+        + listSize + " that is not a a valid element");
     }
-
-    // add an item to the list
-    public void add(Type item) {
-        Node newNode = new Node();
-        newNode.data = item;
-        newNode.next = head;
-        head = newNode;
+    E it = curr.element();                  // Remember value
+    curr.setElement(curr.next().element()); // Pull forward the next element
+    if (curr.next() == tail) {
+      tail = curr;   // Removed last, move tail
     }
+    curr.setNext(curr.next().next());       // Point around unneeded link
+    listSize--;                             // Decrement element count
+    return it;                              // Return value
+  }
 
-    // add an item to the end of the list
-    public void append(Type item) {
-        if (head == null) {
-            add(item);
-        } else {
-            Node newNode = new Node();
-            newNode.data = item;
-            newNode.next = null;
+  public void moveToStart() { 
+    curr = head.next(); // Set curr at list start
+  } 
+  public void moveToEnd() {      
+    curr = tail; // Set curr at list end
+  }
 
-            Node last = head;
-            while (last.next != null) {
-                last = last.next;
-            }
-
-            last.next = newNode;
-        }
+  // Move curr one step left; no change if now at front
+  public void prev() {
+    if (head.next() == curr) {
+      return; // No previous element
     }
-    
-    // remove an item based on the value
-    public void remove(Type item) {
-        Node current = head;
-        Node prev = null;
-
-        while (current != null) {
-            if (current.data.equals(item)) {
-                if (prev == null) {
-                    head = current.next;
-                } else {
-                    prev.next = current.next;
-                }
-            }
-
-            prev = current;
-            current = current.next;
-        }
+    Link<E> temp = head;
+    // March down list until we find the previous element
+    while (temp.next() != curr) {
+      temp = temp.next();
     }
+    curr = temp;
+  }
 
-    // remove an item based on its index
-    public void remove(int index) {
-        Node current = head;
-        Node prev = null;
+  // Move curr one step right; no change if now at end
+  public void next() { if (curr != tail) { curr = curr.next(); } }
 
-        for (int i = 0; i < index; i++) {
-            if (current == null) {
-                return;
-            }
+  public int length() { return listSize; } // Return list length
 
-            prev = current;
-            current = current.next; 
-        }
-        
-        if (prev == null) {
-            head = current.next;
-        } else {
-            prev.next = current.next;
-        }
+
+  // Return the position of the current element
+  public int currPos() {
+    Link<E> temp = head.next();
+    int i;
+    for (i=0; curr != temp; i++) {
+      temp = temp.next();
     }
-   
-    // print the list from start to finsih
-    public void print() {
-        Node current = head;
-        while (current != null) {
-            System.out.println(current.data);
-            current = current.next;
-        }
+    return i;
+  }
+  
+  // Move down list to "pos" position
+  public boolean moveToPos(int pos) {
+    if ((pos < 0) || (pos > listSize)) {
+      return false;
     }
+    curr = head.next();
+    for(int i=0; i<pos; i++) { curr = curr.next(); }
+    return true;
+  }
 
-    // print a linked list backwards using recursion
-    public void printBackwards(Node node) {
-        if (node != null) {
-            printBackwards(node.next);
-            System.out.println(node.data);
-        }
+  // Return true if current position is at end of the list
+  public boolean isAtEnd() { return curr == tail; }
+
+  // Return current element value. Note that null gets returned if curr is at the tail
+  public E getValue() throws NoSuchElementException {
+    if (curr == tail) // No current element
+    {
+      throw new NoSuchElementException("getvalue() in LList has current of " + curr + " and size of "
+        + listSize + " that is not a a valid element");
     }
-    
-    // helper function to begin printing a linked list backwards
-    public void printBackwards() {
-        printBackwards(head);
-    }
-
-    public int size() {
-    	Node current = head;
-	int numElement = 0;
-	while (current != null) {
-		numElement += 1;	//adds to counter until end of list
-		current = current.next;
-	}
-	return numElement;
-    }
-
-    public boolean contains(Type item) {
-	Node current = head;
-    	while (current != null) {
-		if (current.data.equals(item)) {
-			return true;		//searches list until the end
-		}				//returns true when found or false if loop ends
-		current = current.next;
-	}
-	return false;
-    }
-
-    public Type get(int index) {
-    	Node current = head;
-	int currentIndex = 0;
-	while (currentIndex != index) {
-		current = current.next;
-		currentIndex++;
-	}
-	return current.data;
-    }
-
-
+    return curr.element(); 
+ }
+  
+  //Tell if the list is empty or not
+  public boolean isEmpty() {
+    return listSize == 0;
+  }
 }
-
-

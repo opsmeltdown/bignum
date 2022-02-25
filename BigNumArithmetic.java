@@ -24,30 +24,31 @@ public class BigNumArithmetic {
 				line = line.replaceAll("\\s+", " ").trim();
 				String[] arrLine = line.split(" ");
 				for (int i = 0; i < arrLine.length; i++) {
-					/////remove 0's from front of numbers
+					//remove 0's from front of numbers
 					String temp = arrLine[i];
-					for(int j =0; j<temp.length(); j++){
-						if (temp.charAt(j)==0){
-							temp = temp.substring(j+1);
-						}
-						else break;
+					while (temp.charAt(0) == '0' && temp.length() > 1) {
+						temp = temp.replaceFirst("0", "");
 					}
 					arrLine[i] = temp;
-
-					if (arrLine[i].equals("=")) break;
 					if (!arrLine[i].equals("+") && !arrLine[i].equals("*") && !arrLine[i].equals("^")) {
 						stack.push(arrLine[i]);
-					} else {
-						//pop 2 numbers and send to calculate method with sign
-						stack.push(mth.calculate((String)stack.pop(), (String)stack.pop(), arrLine[i]));
-						
+					} 
+					//else if (stack.topValue()
+					else {
+					//pop 2 numbers and send to calculate
+					stack.push(mth.calculate((String)stack.pop(), (String)stack.pop(), arrLine[i]));	
 					}
 				}
-			System.out.println(line + " " + stack.pop());
+			for (int i = 0; i < arrLine.length; i++) {
+				if (i != 0) System.out.print(" ");
+				System.out.print(arrLine[i]);
+			}
+
+			System.out.println(" = " + stack.pop());
 			}	
 
 		}  catch (IOException e){
 			System.out.println("File not found.");
 		}
 	}	
-}	
+}	 
