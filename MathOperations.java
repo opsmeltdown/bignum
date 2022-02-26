@@ -81,6 +81,9 @@ public class MathOperations {
 		LList<Integer> answer = new LList<Integer>();
 
 		//TO DO stuff here
+		if(a.length() <= b.length()){
+			
+		}
 	
 		return answer; 
 	}
