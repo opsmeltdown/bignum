@@ -42,7 +42,7 @@ public class MathOperations {
 		LList<Integer> answer = new LList<Integer>();
 		Integer carry = new Integer(0);
 		Integer sum = new Integer(0);
-		System.out.println("a length = " + a.length() + " b length = " + b.length());	
+		//System.out.println("a length = " + a.length() + " b length = " + b.length());	
 		//find the bigger sized list and use that as for loop parameter
 		//ineffiecient but itll do
 		if (a.length() >= b.length()) {
@@ -82,9 +82,28 @@ public class MathOperations {
 
 		//TO DO stuff here
 		if(a.length() <= b.length()){
+			LList<Integer> PR1 = new LList<Integer>();
+			//first value in a times all values in b, partial result
+			for(b.moveToStart(); !b.isAtEnd(); b.next()){
+				int temp = a.getValue() * b.getValue();
+				PR1.append(temp);
+			}
+			a.next();
+			LList<Integer> PR2 = new LList<Integer>();
+			PR2.append(0);
+			//second value in a times all values in b, partial result
+			for(b.moveToStart(); !b.isAtEnd(); b.next()){
+				int temp = a.getValue() * b.getValue();
+				PR2.append(temp);
+			}
+			//combine partial results to get full result
 			
+			System.out.println(LLtoString(PR1));
+			System.out.println(LLtoString(PR2));
+			answer = addition(PR1, PR2);
 		}
-	
+
+		System.out.println(LLtoString(answer));
 		return answer; 
 	}
 
