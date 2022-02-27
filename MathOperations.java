@@ -16,7 +16,6 @@ public class MathOperations {
 	private LList<Integer> StringtoLL (String a) {
 		LList<Integer> temp = new LList<Integer>();
 		//iterate thru string adding all numbers to linked list nodes
-		System.out.println("String length = " + a.length());
 		temp.moveToStart();
 		for( int i = 0; i < a.length(); i++){
 			int num = Character.getNumericValue(a.charAt(i));
@@ -35,40 +34,39 @@ public class MathOperations {
 		return answer;
 	}
 
-	
+
 	private LList<Integer> addition (LList<Integer> a, LList<Integer> b) {
 		//add the 2 LinkedLists inputted and 
 		//return answer list to the calculate method
 		LList<Integer> answer = new LList<Integer>();
 		Integer carry = new Integer(0);
 		Integer sum = new Integer(0);
-		//System.out.println("a length = " + a.length() + " b length = " + b.length());	
 		//find the bigger sized list and use that as for loop parameter
 		//ineffiecient but itll do
 		if (a.length() >= b.length()) {
 			for(a.moveToStart(); !a.isAtEnd(); a.next()){
 				sum = carry;
-	        		if (!b.isAtEnd()){
+				if (!b.isAtEnd()){
 					sum += b.getValue();
 				}
 				sum += a.getValue();
 				carry = sum / 10;
-		 		sum = sum % 10;
-		 		answer.insert(sum);
-		 		b.next();
+				sum = sum % 10;
+				answer.insert(sum);
+				b.next();
 			}
 
 		} else {
 			for(b.moveToStart(); !b.isAtEnd(); b.next()){
 				sum = carry;
-	        		if (!a.isAtEnd()){
+				if (!a.isAtEnd()){
 					sum += a.getValue();
 				}
 				sum += b.getValue();
 				carry = sum / 10;
-		 		sum = sum % 10;
-		 		answer.insert(sum);
-		 		a.next();
+				sum = sum % 10;
+				answer.insert(sum);
+				a.next();
 			}
 		}
 		if (carry != 0) answer.insert(carry);
@@ -79,29 +77,51 @@ public class MathOperations {
 		//multiply lists and return answer list
 		//will have to use add function
 		LList<Integer> answer = new LList<Integer>();
+		Integer temp = new Integer(0);
 
 		//TO DO stuff here
 		if(a.length() <= b.length()){
 			LList<Integer> PR1 = new LList<Integer>();
 			//first value in a times all values in b, partial result
 			for(b.moveToStart(); !b.isAtEnd(); b.next()){
-				int temp = a.getValue() * b.getValue();
+				temp = a.getValue() * b.getValue();
+				//reverse temp if its longer than 1 digit so it works in addition function
+				String str = temp.toString() , reverse = "";
+				char ch;
+				if (str.length() > 1) { 
+					for (int i=0; i<str.length(); i++) {
+						ch= str.charAt(i); 
+						reverse= ch + reverse;
+					}
+				temp = Integer.valueOf(reverse);
+				}
 				PR1.append(temp);
 			}
 			a.next();
 			LList<Integer> PR2 = new LList<Integer>();
-			PR2.append(0);
 			//second value in a times all values in b, partial result
 			for(b.moveToStart(); !b.isAtEnd(); b.next()){
-				int temp = a.getValue() * b.getValue();
-				PR2.append(temp);
+				temp = a.getValue() * b.getValue();
+				String str = temp.toString() , reverse = "";
+				char ch;
+				if (str.length() > 1) {
+					for (int i=0; i<str.length(); i++) {
+						ch= str.charAt(i); 
+						reverse= ch + reverse;
+					}				
+				temp = Integer.valueOf(reverse);
+				}	
+				PR2.append(temp);				
 			}
 			//combine partial results to get full result
-			
+			PR2.moveToStart();
+			//PR2.insert(0);
+			//PR2.insert(0);
 			System.out.println(LLtoString(PR1));
 			System.out.println(LLtoString(PR2));
 			answer = addition(PR1, PR2);
 		}
+
 
 		System.out.println(LLtoString(answer));
 		return answer; 
