@@ -80,38 +80,45 @@ public class MathOperations {
 		Integer temp = new Integer(0);
 
 		//TO DO stuff here
+		/*
 		if(a.length() <= b.length()){
 			LList<Integer> PR1 = new LList<Integer>();
 			//first value in a times all values in b, partial result
+			a.moveToStart();
 			for(b.moveToStart(); !b.isAtEnd(); b.next()){
 				temp = a.getValue() * b.getValue();
 				//reverse temp if its longer than 1 digit so it works in addition function
-				String str = temp.toString() , reverse = "";
+				String str = temp.toString(); //, reverse = "";
 				char ch;
 				if (str.length() > 1) { 
 					for (int i=0; i<str.length(); i++) {
 						ch= str.charAt(i); 
-						reverse= ch + reverse;
+						//reverse= ch + reverse;
+						PR1.moveToStart();
+						PR1.insert(Integer.valueOf(ch));
 					}
-				temp = Integer.valueOf(reverse);
+				//temp = Integer.valueOf(reverse);
+
 				}
-				PR1.append(temp);
+				else PR1.append(temp);
 			}
 			a.next();
 			LList<Integer> PR2 = new LList<Integer>();
 			//second value in a times all values in b, partial result
 			for(b.moveToStart(); !b.isAtEnd(); b.next()){
 				temp = a.getValue() * b.getValue();
-				String str = temp.toString() , reverse = "";
+				String str = temp.toString();// , reverse = "";
 				char ch;
 				if (str.length() > 1) {
 					for (int i=0; i<str.length(); i++) {
 						ch= str.charAt(i); 
-						reverse= ch + reverse;
-					}				
-				temp = Integer.valueOf(reverse);
+						//reverse= ch + reverse;
+						PR2.moveToStart();
+						PR2.insert(Integer.valueOf(ch));
+					}	
+					//temp = Integer.valueOf(reverse);
 				}	
-				PR2.append(temp);				
+				else PR2.append(temp);				
 			}
 			//combine partial results to get full result
 			PR2.moveToStart();
@@ -121,7 +128,32 @@ public class MathOperations {
 			System.out.println(LLtoString(PR2));
 			answer = addition(PR1, PR2);
 		}
+		**/
+		Stack multstack = new AStack();
+		String str ="";
+		int i =0;
+		if(a.length() <= b.length()){
+			for(a.moveToStart(); !a.isAtEnd(); a.next()){
+				str = "";
+				for(b.moveToStart(); !b.isAtEnd(); b.next()) {
+					Integer num = a.getValue() * b.getValue();
+					str = num.toString() + str;
+				}
+				i++;
+				int j =i;
+				while(j>0){
+					str = str + "0";
+					j--;
+				}
+				//push
+				multstack.push(str);
+				
+			}
 
+		}
+		while(!multstack.isEmpty()){
+			multstack.push(LLtoString(addition(StringtoLL((String)multstack.pop())), StringtoLL((String)multstack.pop()))); 
+		}
 
 		System.out.println(LLtoString(answer));
 		return answer; 

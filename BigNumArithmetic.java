@@ -20,34 +20,60 @@ public class BigNumArithmetic {
 			//loop as long as there is another line
 			while (scan.hasNextLine()) {
 				line = scan.nextLine();
+				int numcount = 0;
+				int opcount = 0;
 				if (line.length() > 0) {
 					//removes extra whitespace from input line
 					line = line.replaceAll("\\s+", " ").trim();
 					String[] arrLine = line.split(" ");
-					for (int i = 0; i < arrLine.length; i++) {
-						//remove 0's from front of numbers
-						String temp = arrLine[i];
-						while (temp.charAt(0) == '0' && temp.length() > 1) {
-							temp = temp.replaceFirst("0", "");
-						}
-						arrLine[i] = temp;
-						if (!arrLine[i].equals("+") && !arrLine[i].equals("*") && !arrLine[i].equals("^")) {
-							stack.push(arrLine[i]);
-						} 
-						//else if (stack.topValue()
-						else {
-							//pop 2 numbers and send to calculate
-							stack.push(mth.calculate((String)stack.pop(), (String)stack.pop(), arrLine[i]));	
-						}
-					}
-					for (int i = 0; i < arrLine.length; i++) {
-						if (i != 0) System.out.print(" ");
-						System.out.print(arrLine[i]);
-					}
 
-					System.out.println(" = " + stack.pop());
+					for(int i=0; i<arrLine.length; i++) {
+						if (!arrLine[i].equals("+") && !arrLine[i].equals("*") && !arrLine[i].equals("^")) {
+							numcount++;
+						} 
+						else opcount++;
+					}
+					System.out.println(numcount);
+					System.out.println(opcount);
+					if (opcount == numcount-1) {
+						for (int i = 0; i < arrLine.length; i++) {
+							//remove 0's from front of numbers
+							String temp = arrLine[i];
+							while (temp.charAt(0) == '0' && temp.length() > 1) {
+								temp = temp.replaceFirst("0", "");
+							}
+							arrLine[i] = temp;
+							if (!arrLine[i].equals("+") && !arrLine[i].equals("*") && !arrLine[i].equals("^")) {
+								stack.push(arrLine[i]);
+							} 
+							//else if (stack.topValue()
+							else {
+								//pop 2 numbers and send to calculate
+								stack.push(mth.calculate((String)stack.pop(), (String)stack.pop(), arrLine[i]));	
+							}
+						}
+						for (int i = 0; i < arrLine.length; i++) {
+							if (i != 0) System.out.print(" ");
+							System.out.print(arrLine[i]);
+						}
+	
+						System.out.println(" = " + stack.pop());
+					}
+					
+					else {
+						for (int i = 0; i < arrLine.length; i++) {
+						if (i != 0) {
+							System.out.print(" ");
+							
+						}
+						System.out.print(arrLine[i]);
+						System.out.println(" = " );
+						}
+
+					
+					}
 				}
-			}	
+			}
 
 		}  catch (IOException e){
 			System.out.println("File not found.");
