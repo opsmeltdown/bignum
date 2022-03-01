@@ -33,8 +33,6 @@ public class BigNumArithmetic {
 						} 
 						else opcount++;
 					}
-					System.out.println(numcount);
-					System.out.println(opcount);
 					if (opcount == numcount-1) {
 						for (int i = 0; i < arrLine.length; i++) {
 							//remove 0's from front of numbers
@@ -56,21 +54,21 @@ public class BigNumArithmetic {
 							if (i != 0) System.out.print(" ");
 							System.out.print(arrLine[i]);
 						}
-	
+
 						System.out.println(" = " + stack.pop());
 					}
-					
+
 					else {
 						for (int i = 0; i < arrLine.length; i++) {
-						if (i != 0) {
-							System.out.print(" ");
-							
-						}
-						System.out.print(arrLine[i]);
-						System.out.println(" = " );
-						}
+							if (i != 0) {
+								System.out.print(" ");
 
-					
+							}
+							System.out.print(arrLine[i]);
+						}
+						System.out.println(" = " );
+
+
 					}
 				}
 			}

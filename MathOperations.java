@@ -34,6 +34,13 @@ public class MathOperations {
 		return answer;
 	}
 
+	private LList<Integer> reverseLL (LList<Integer> a) {
+		LList<Integer> reversal = new LList<Integer>();
+		for (a.moveToStart(); !a.isAtEnd(); a.next()) {
+			reversal.insert(a.getValue());
+		}
+		return reversal;
+	}
 
 	private LList<Integer> addition (LList<Integer> a, LList<Integer> b) {
 		//add the 2 LinkedLists inputted and 
@@ -79,84 +86,54 @@ public class MathOperations {
 		LList<Integer> answer = new LList<Integer>();
 		Integer temp = new Integer(0);
 
-		//TO DO stuff here
-		/*
-		if(a.length() <= b.length()){
-			LList<Integer> PR1 = new LList<Integer>();
-			//first value in a times all values in b, partial result
-			a.moveToStart();
-			for(b.moveToStart(); !b.isAtEnd(); b.next()){
-				temp = a.getValue() * b.getValue();
-				//reverse temp if its longer than 1 digit so it works in addition function
-				String str = temp.toString(); //, reverse = "";
-				char ch;
-				if (str.length() > 1) { 
-					for (int i=0; i<str.length(); i++) {
-						ch= str.charAt(i); 
-						//reverse= ch + reverse;
-						PR1.moveToStart();
-						PR1.insert(Integer.valueOf(ch));
-					}
-				//temp = Integer.valueOf(reverse);
-
-				}
-				else PR1.append(temp);
-			}
-			a.next();
-			LList<Integer> PR2 = new LList<Integer>();
-			//second value in a times all values in b, partial result
-			for(b.moveToStart(); !b.isAtEnd(); b.next()){
-				temp = a.getValue() * b.getValue();
-				String str = temp.toString();// , reverse = "";
-				char ch;
-				if (str.length() > 1) {
-					for (int i=0; i<str.length(); i++) {
-						ch= str.charAt(i); 
-						//reverse= ch + reverse;
-						PR2.moveToStart();
-						PR2.insert(Integer.valueOf(ch));
-					}	
-					//temp = Integer.valueOf(reverse);
-				}	
-				else PR2.append(temp);				
-			}
-			//combine partial results to get full result
-			PR2.moveToStart();
-			//PR2.insert(0);
-			//PR2.insert(0);
-			System.out.println(LLtoString(PR1));
-			System.out.println(LLtoString(PR2));
-			answer = addition(PR1, PR2);
-		}
-		**/
 		Stack multstack = new AStack();
+		Integer carry = new Integer(0);
 		String str ="";
 		int i =0;
 		if(a.length() <= b.length()){
-			for(a.moveToStart(); !a.isAtEnd(); a.next()){
-				str = "";
-				for(b.moveToStart(); !b.isAtEnd(); b.next()) {
-					Integer num = a.getValue() * b.getValue();
-					str = num.toString() + str;
-				}
-				i++;
-				int j =i;
-				while(j>0){
-					str = str + "0";
-					j--;
-				}
-				//push
-				multstack.push(str);
-				
+			num1 = a;
+			num2 = b;
+		} else {
+			num1 = b;
+			num2 = a;
+		}
+		for(num1.moveToStart(); !num1.isAtEnd(); num1.next()){
+			str = "";
+			for(num2.moveToStart(); !num2.isAtEnd(); num2.next()) {
+				Integer num = num1.getValue() * num2.getValue();
+				num += carry;
+				carry = num / 10;
+				num = num % 10;
+				str = num.toString() + str;
 			}
-
+			int j =i;
+			while(j>0){
+				str = str + "0";
+				j--;
+			}
+			if (carry != 0) str = carry.toString() + str;
+			carry = 0;
+			//push
+			multstack.push(str);
+			i++;
 		}
+		String topOfStack;
+		String nextInStack;
 		while(!multstack.isEmpty()){
-			multstack.push(LLtoString(addition(StringtoLL((String)multstack.pop())), StringtoLL((String)multstack.pop()))); 
+			topOfStack = (String) multstack.pop();
+			//just in case its multiplication by 0
+			while (topOfStack.charAt(0) == '0' && topOfStack.length() > 1) {
+				topOfStack = topOfStack.replaceFirst("0", "");
+			}
+			num1 = StringtoLL(topOfStack);
+			if (!multstack.isEmpty()) {
+				nextInStack = (String) multstack.pop();
+			} else break;
+			num1 = StringtoLL(topOfStack);
+			num2 = StringtoLL(nextInStack);
+			multstack.push(LLtoString(addition(num1,num2)));
 		}
-
-		System.out.println(LLtoString(answer));
-		return answer; 
+		return reverseLL(num1); 
 	}
 
 	private LList<Integer> exp (LList<Integer> a, LList<Integer> b) {
