@@ -10,7 +10,7 @@ public class MathOperations {
 		num2 = StringtoLL(b);
 		if (sign.equals("+")) return LLtoString(addition(num1,num2));	
 		else if (sign.equals("*")) return LLtoString(mult(num1,num2));
-		else return LLtoString(exp(num1,num2));
+		else return LLtoString(exp(a, num2));
 	}
 
 	private LList<Integer> StringtoLL (String a) {
@@ -18,8 +18,8 @@ public class MathOperations {
 		//iterate thru string adding all numbers to linked list nodes
 		temp.moveToStart();
 		for( int i = 0; i < a.length(); i++){
-			int num = Character.getNumericValue(a.charAt(i));
-			Integer x = new Integer(num);
+			int index = Character.getNumericValue(a.charAt(i));
+			Integer x = new Integer(index);
 			temp.insert(x);
 		}
 		return temp;
@@ -49,7 +49,6 @@ public class MathOperations {
 		Integer carry = new Integer(0);
 		Integer sum = new Integer(0);
 		//find the bigger sized list and use that as for loop parameter
-		//ineffiecient but itll do
 		if (a.length() >= b.length()) {
 			for(a.moveToStart(); !a.isAtEnd(); a.next()){
 				sum = carry;
@@ -80,21 +79,21 @@ public class MathOperations {
 		return answer; 
 	}
 
-	private LList<Integer> mult (LList<Integer> a, LList<Integer> b) {
-		//multiply lists and return answer list
-		//will have to use add function
-		LList<Integer> answer = new LList<Integer>();
+		/**
+		 * multiply lists and return answer list
+		 * will use add function to
+		*/
+	private LList<Integer> mult(LList<Integer> a, LList<Integer>b) {
 		Integer temp = new Integer(0);
-
-		Stack multstack = new AStack();
 		Integer carry = new Integer(0);
 		String str ="";
-		int i =0;
+		String superstring = "";
+		int numOfZeros =0;
 		if(a.length() <= b.length()){
 			num1 = a;
 			num2 = b;
 		} else {
-			num1 = b;
+			num1 = b; 
 			num2 = a;
 		}
 		for(num1.moveToStart(); !num1.isAtEnd(); num1.next()){
@@ -106,42 +105,55 @@ public class MathOperations {
 				num = num % 10;
 				str = num.toString() + str;
 			}
-			int j =i;
+			int j = numOfZeros;
 			while(j>0){
-				str = str + "0";
+				 str = str + "0";
 				j--;
 			}
 			if (carry != 0) str = carry.toString() + str;
 			carry = 0;
-			//push
-			multstack.push(str);
-			i++;
+			superstring = superstring + str + " ";
+			numOfZeros++;
 		}
-		String topOfStack;
-		String nextInStack;
+		String[] arrMult = superstring.split(" ");
+		Stack multstack = new AStack(arrMult.length);
+		for (int i = 0; i < arrMult.length; i++) {
+			multstack.push(arrMult[i]);
+		}
+		LList<Integer> product1 = new LList<Integer>();
+		LList<Integer> product2 = new LList<Integer>();
+		String str1;
+		String str2;
 		while(!multstack.isEmpty()){
-			topOfStack = (String) multstack.pop();
-			//just in case its multiplication by 0
-			while (topOfStack.charAt(0) == '0' && topOfStack.length() > 1) {
-				topOfStack = topOfStack.replaceFirst("0", "");
-			}
-			num1 = StringtoLL(topOfStack);
+			str1 = (String)multstack.pop();
+			while (str1.charAt(0) == '0' && str1.length() > 1) {
+				str1 = str1.replaceFirst("0", "");
+			} 
+			product1 = StringtoLL(str1);
 			if (!multstack.isEmpty()) {
-				nextInStack = (String) multstack.pop();
+				str2 = (String)multstack.pop();
+				product2 = StringtoLL(str2);
 			} else break;
-			num1 = StringtoLL(topOfStack);
-			num2 = StringtoLL(nextInStack);
-			multstack.push(LLtoString(addition(num1,num2)));
+			multstack.push(calculate(str1,str2, "+"));
 		}
-		return reverseLL(num1); 
+		return reverseLL(product1); 
 	}
 
-	private LList<Integer> exp (LList<Integer> a, LList<Integer> b) {
-		//use exponentiation by squaring which i know nothing about right now xD	
-		LList<Integer> answer = new LList();
-
-		//TO DO stuff here
-
-		return answer; 
+	private LList<Integer> exp (String a, LList<Integer> b) {
+		//use exponentiation by squaring
+		LList<Integer> answer = new LList<Integer>();
+		int power = Integer.parseInt(a);
+		answer.insert(1);
+		//algorithm assumes linkedlist is not reversed, so reverse it c:
+		b = reverseLL(b);
+		if (power == 1) return b;
+		while (power > 0) {
+			if ((power % 2) == 1) {
+				answer = reverseLL(StringtoLL(calculate(LLtoString(answer), LLtoString(b), "*")));
+			} 
+			b = reverseLL(StringtoLL(calculate(LLtoString(b), LLtoString(b), "*")));
+			power = power / 2;
+		}
+		return answer;
 	}
 }
