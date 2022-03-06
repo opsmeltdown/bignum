@@ -33,7 +33,8 @@ public class BigNumArithmetic {
 						} 
 						else opcount++;
 					}
-					if (opcount == numcount-1) {
+					
+					if (opcount == numcount-1) { //checks if expression is valid
 						for (int i = 0; i < arrLine.length; i++) {
 							//remove 0's from front of numbers
 							String temp = arrLine[i];
@@ -44,7 +45,7 @@ public class BigNumArithmetic {
 							if (!arrLine[i].equals("+") && !arrLine[i].equals("*") && !arrLine[i].equals("^")) {
 								stack.push(arrLine[i]);
 							} 
-							//else if (stack.topValue()
+	
 							else {
 								//pop 2 numbers and send to calculate
 								stack.push(mth.calculate((String)stack.pop(), (String)stack.pop(), arrLine[i]));	
@@ -58,6 +59,7 @@ public class BigNumArithmetic {
 						System.out.println(" = " + stack.pop());
 					}
 
+					//handles invalid expressions
 					else {
 						for (int i = 0; i < arrLine.length; i++) {
 							if (i != 0) {
